@@ -1,6 +1,7 @@
 import streamlit as st
 import pickle
 import numpy as np
+import pandas as pd
 
 # Load model
 model = pickle.load(open('model.pkl', 'rb'))
@@ -54,9 +55,19 @@ age = st.number_input("**Age:**", min_value=10, max_value=100, value=50)
 sex = st.selectbox("**Sex:** 0 = Female, 1 = Male", [0, 1])
 
 if st.button("🔍 Predict"):
-    input_data = np.array([[cp, thalach, oldpeak, exang, ca, thal, slope, age, sex]])
+    input_data =  pd.DataFrame([[cp, thalach, oldpeak, exang, ca, thal, slope, age, sex]],
+                        columns=['cp', 'thalach', 'oldpeak', 'exang', 'ca', 'thal', 'slope', 'age', 'sex'])
     prediction = model.predict(input_data)[0]
     if prediction == 1:
-        st.success("🩺 The model predicts: **Heart Disease Detected**")
+        st.markdown("""
+<div style='background-color: #ffdddd; padding: 10px; border-radius: 5px; color: red; font-size: 18px; font-weight: bold;'>
+🩺 The model predicts: Heart Disease Detected
+</div>
+""", unsafe_allow_html=True)
     else:
-        st.success("✅ The model predicts: **No Heart Disease**")
+        st.markdown("""
+<div style='background-color: #ffdddd; padding: 10px; border-radius: 5px; color: green; font-size: 18px; font-weight: bold;'>
+"✅ The model predicts: No Heart Disease"
+</div>
+""", unsafe_allow_html=True)
+        
